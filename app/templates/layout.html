@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% block head %}
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+		<title>{% block title %}{% endblock %} - {{config.APP_NAME}}</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='bower_components/angular-ui-tree/dist/angular-ui-tree.min.css')}}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='bower_components/ng-tags-input/ng-tags-input.css')}}">
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="//unpkg.com/leaflet@0.7.7/dist/leaflet.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ng-embed/2.1.1/ng-embed.min.css" />
+
+		{% endblock %}
+	</head>
+	<body>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='bower_components/angular-ui-tree/dist/angular-ui-tree.js')}}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='bower_components/ui-listView/dist/ui-listView.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='bower_components/ng-tags-input/ng-tags-input.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='bower_components/angular-thumbnail/angular-thumbnail.min.js') }}"></script>
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.css' rel='stylesheet' />
+		<link href="https://api.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/angular-mapboxgl-directive/0.26.0/angular-mapboxgl-directive.min.css">
+		<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-mapboxgl-directive/0.26.0/angular-mapboxgl-directive.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/ng-embed/2.1.1/ng-embed.min.js"></script>
+		<!-- If you need other layers -->
+
+		{% include "_nav.html" %}
+
+		<section class="content">
+			{% block content %}{% endblock %}
+		</section>
+
+		<footer>
+			{% block footer %}
+			{% endblock %}
+		</footer>
+		<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+
+	</body>
+</html>

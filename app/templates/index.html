@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% if current_user.is_authenticated() %}
+
+<div ng-app="app" ng-controller="Consensus">
+    <div class="container">
+
+        <table>
+            <tr>
+                <th valign="top">
+                    <mapboxgl gl-controls="glControls" gl-style="'mapbox://styles/mapbox/dark-v9'" style="width: 700px;height: 500px;"></mapboxgl>
+
+                    <div id="posting" class="panel panel-default" style="width: 700px">
+                        <h1 align="center">Consensus</h1>
+                        <div class="panel-heading">
+                            <form ng-submit="loadPosts()">
+                                <tags-input style="height: 45px" on-blur="loadPosts()"
+                                            class="form-control" ng-model="search.tags" placeholder="Search Tags.."></tags-input>
+                            </form>
+                            <button class="btn btn-primary" style="margin-left: 8px;" ng-click="open()">Submit New</button>
+                            </br>
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="ui-list-view-bordered" ng-repeat="post in posts">
+                                <div ng-click="loadComments(post.id)" class="card">
+                                    <div class="card-block">
+                                        <img class="pull-left" height="40" width="40" ng-src="{a post.thumb a}"/>
+                                        <a class="pull-left" style="margin-left: 30px;" target="_blank" href="{a post.link a}">{a post.title a}</a>
+                                        <button ng-click="vote(post.id, 'upvote')" class="btn btn-success pull-right" style="margin-right: 10px;">+1</button>
+                                        <button ng-click="vote(post.id, 'downvote')" class="btn btn-danger pull-right" style="margin-right: 10px;">-1</button>
+                                        <button class="btn btn-info pull-right" style="margin-right: 10px;">Score {a post.modifier a}</button>
+                                        <br ng-if="isOpen(post.id)"></br>
+                                        <hr ng-if="isOpen(post.id)">
+                                        <div style="margin-left: 20px;" ng-if="isOpen(post.id)">{a post.text a}</div>
+                                        <hr ng-if="isOpen(post.id)">
+                                        <div>
+                                            <button ng-if="isOpen(post.id)" class="btn btn-primary pull-right" ng-click="openComment(post.id, 0)">Submit New</button>
+                                            </br></br>
+                                        </div>       
+                                        <div ng-if="isOpen(post.id) && all_comments[post.id].length>0" ui-tree>
+                                          <ol ui-tree-nodes="" ng-model="all_comments[post.id]">
+                                            <li ng-repeat="parent in all_comments[post.id]" ui-tree-node>
+                                              <div  ui-tree-handle>
+                                                <div class="card" style="margin-left: 20px;">{a parent.node.text a} </br>                                  
+                                                     <button data-nodrag style="display: inline-block;" ng-if="isOpen(post.id)" class="btn btn-primary pull-right" ng-click="openComment(post.id, parent.id)">Reply</button></div>
+
+                                                </br>
+                                              </div>
+                                              <ol ui-tree-nodes="" ng-model="parent.children">
+                                                <li ng-repeat="comment in parent.children" ui-tree-node>
+                                                  <div ui-tree-handle>
+                                                    <div class="card" style="margin-left: 20px;">{a comment.node.text a}</br>
+                                                        <button data-nodrag style="display: inline-block;" ng-if="isOpen(post.id)" class="btn btn-primary pull-right" ng-click="openComment(post.id, comment.id)">Reply</button></div>
+
+                                                  </div>
+                                                </li>
+                                              </ol>
+                                            </li>
+                                          </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                </br>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+                <th valign="top">
+                    <div id="trending" class="panel panel-default" style="width: 400px;">
+                        <h1 align="center">Trending Tags</h1>
+                        <div class="panel-body">
+                            <div class="ui-list-view-bordered" ng-repeat="trend in trends">
+                                <div class="card">
+                                    <div ng-click="setSearch(trend.name)" class="card-block">
+                                        <label class="pull-left" style="margin-left: 10px;">{a trend.name a}</label>
+                                        <label class="pull-right" style="margin-right: 10px;">{a trend.trending a}</label>
+                                        <label class="pull-right" style="margin-right: 60px;">Posts: {a trend.count a}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+    </div>
+</div>
+<!-- Modal -->
+
+{% else %}
+<p>Please <a href="{{ url_for_security('login') }}?next=/admin">login</a> for access.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,41 @@
+version: "3"
+services:
+    redis:
+        image: redis
+        networks:
+            - consensus
+    consensus:
+        image: consensus
+        environment:
+            DB_USER: 'sharemore'
+            DB_PASS: 'consensusdev'
+            DB_HOST: 'postgres'
+            DB_NAME: 'consensus'
+            SERVER_ENV: 'Development'
+            APP_NAME: 'app'
+            SECRET_KEY: 'key'
+            SECURITY_PASSWORD_SALT: 'salt'
+        networks:
+            - consensus
+        ports:
+            - "80:80"
+    postgres:
+        image:  postgres
+        environment:
+            POSTGRES_DB: 'consensus'
+            POSTGRES_USER: 'sharemore'
+            POSTGRES_PASSWORD: 'consensusdev'
+        networks:
+            - consensus
+    portainer:
+        image: portainer/portainer
+        command: -H unix:///var/run/docker.sock
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        ports:
+            - "9000:9000"
+        deploy:
+            placement:
+                constraints: [node.role == manager]
+networks:
+    consensus:
