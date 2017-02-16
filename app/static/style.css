@@ -90,3 +90,12 @@ nav .nav li a:hover {
 .ngTagsInput .tags .tag-item span {
 	font: 18px/1.5 'Open Sans', Helvetica, sans-serif;
 }
+
+.form-control {
+	border: 0;
+}
+
+.no-border {
+	border: 0;
+	box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+}

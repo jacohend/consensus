@@ -10,7 +10,7 @@ from text_cnn import TextCNN
 from tensorflow.contrib import learn
 import csv
 
-def classify_sentiment(sentence):
+def classify_sentiment(sentence, checkpoint_str):
 	# Parameters
 	# ==================================================
 	if not "log_device_placement" in tf.flags.FLAGS.__flags:
@@ -39,7 +39,7 @@ def classify_sentiment(sentence):
 	x_raw = [sentence]
 	y_test=None
 
-	checkpoint_dir="/home/server/src/app/cnn/runs/1486207107/checkpoints/"
+	checkpoint_dir=checkpoint_str
 	# Map data into vocabulary
 	vocab_path = os.path.join(checkpoint_dir, "..", "vocab")
 	vocab_processor = learn.preprocessing.VocabularyProcessor.restore(vocab_path)

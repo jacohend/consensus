@@ -8,7 +8,7 @@ from models import *
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-def moderate_posts():
+def moderate_posts(config):
     lock = redlock.lock("post_query", 1000)
     if lock:
         posts = Post.query.filter(int(time.time()) - Post.updated > 300, int(time.time()) - Post.created < 432000, Post.visible==True).all()
@@ -37,9 +37,9 @@ def moderate_posts():
                 sys.stderr.write("resource-locked, continuing")
             try:
                 lock = redlock.lock("tensorflow", 1000)
-                if lock:
+                if lock and "ML" in config:
                     if post.sentiment=="":
-                        post.sentiment = json.dumps(classify_sentiment(post.text))
+                        post.sentiment = json.dumps(classify_sentiment(post.text, config["CHECKPOINT_DIR"]))
                 else:
                     return
             except Exception as e:

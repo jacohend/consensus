@@ -22,7 +22,10 @@ run apt-get install -y python python-dev python-setuptools
 run apt-get install -y nginx supervisor
 run apt-get install -y python-mysqldb
 run apt-get install -y libpq-dev
+run apt-get install -y libtcmalloc-minimal4
+run apt-get purge -y libopenblas-dev
 run easy_install pip
+run pip install --no-binary=:all: numpy
 
 # install uwsgi now because it takes a little while
 run pip install uwsgi
@@ -33,7 +36,6 @@ run apt-get install -y software-properties-common python-software-properties
 run apt-get update
 run add-apt-repository -y ppa:nginx/stable
 
-# install our code
 add . /home/server/src
 
 # setup all the configfiles

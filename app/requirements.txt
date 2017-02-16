@@ -16,7 +16,6 @@ celery
 simplifycommerce-sdk-python
 supervisor-stdout
 tensorflow
-numpy
 h5py
 gensim
 geopy

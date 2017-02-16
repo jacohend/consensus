@@ -15,6 +15,7 @@ services:
             APP_NAME: 'app'
             SECRET_KEY: 'key'
             SECURITY_PASSWORD_SALT: 'salt'
+            LD_PRELOAD: '/usr/lib/libtcmalloc_minimal.so.4'
         networks:
             - consensus
         ports:

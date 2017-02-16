@@ -40,8 +40,8 @@ def associate(children, parents):
 def get_city(city):
     g = geocoder.google(city)
     g = g.json
-    if "city" in g and "lat" in g and "lon" in g:
-        return {"city": g["city"], "latitude": g["lat"], "longitude": g["lon"]}
+    if "city" in g and "lat" in g and "lng" in g:
+        return {"city": g["city"], "latitude": g["lat"], "longitude": g["lng"]}
 
 
 def get_toponym(ip):

@@ -273,29 +273,29 @@ app.controller("Consensus", ['$scope', '$http', '$uibModal', 'geolocation', func
                  //formatted address
                 //find country name
                      for (var i=0; i<results[0].address_components.length; i++) {
-                    for (var b=0;b<results[0].address_components[i].types.length;b++) {
+                        for (var b=0;b<results[0].address_components[i].types.length;b++) {
 
-                    //there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
-                        if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
-                            //this is the object you are looking for
-                            city= results[0].address_components[i];
-                            break;
+                        //there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
+                            if (results[0].address_components[i].types[b] == "locality" || results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                                //this is the object you are looking for
+                                city= results[0].address_components[i];
+                                $scope.city = city.short_name;
+                                console.log($scope.city);
+                                return;
+                            }
                         }
                     }
-                }
                 //city data
-                    $scope.city = city.short_name;
                 } else {
-                    $scope.city = "unknown";
+                    $scope.city = "";
                 }
               } else {
-                    $scope.city = "unknown";
+                    $scope.city = "";
               }
             });
         }
         geolocation.getLocation().then(function(data){
-            $scope.city = codeLatLng(data.coords.latitude, data.coords.longitude);
-            console.log($scope.city)
+            codeLatLng(data.coords.latitude, data.coords.longitude);
         });
 
         $scope.loadPosts();
