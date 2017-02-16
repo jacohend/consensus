@@ -11,10 +11,10 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import logging
 
-from moderation import *
-from database import db
-from utils import *
 from application import *
+from database import db
+from moderation import *
+from utils import *
 import models
 from models import *
 from admin import init_admin
@@ -84,8 +84,11 @@ def post_post(tags):
     user = User.query.get(current_user.id)
     user.current_login_ip=request.remote_addr;
         #geo_ip = toponum_fuzzer(get_toponym(user.current_login_ip))
-    geo_ip = get_toponym(user.current_login_ip)
-    user.toponym = json.dumps(geo_ip)
+    if "toponym" in content:
+        user.toponym = get_city(content["toponym"])
+    else:
+        geo_ip = get_toponym(user.current_login_ip)
+        user.toponym = json.dumps(geo_ip)
     insert["toponym"] = user.toponym
     for tag in tag_list:
         print(tag)
@@ -111,11 +114,11 @@ def get_comments(id):
     comments = Comment.query.filter(Comment.post_id==id).paginate(page, 50, False)
     cmts = [{"id":comment.id, "node":comment.to_dict(), "parent":comment.parent, "children":json.loads(comment.children)} for comment in comments.items]
     nodes = dict((c["id"], c) for c in cmts)
-    sys.stderr.write(str(nodes) + "\n")
     for c in cmts:
         if "parent" in c and c["parent"] != 0 and c["parent"] != None:
-            sys.stderr.write(str(c["parent"]) + "\n")
-            sys.stderr.write(str(c["id"]) + "\n")
+            nodes[c["parent"]]["children"] = []
+    for c in cmts:
+        if "parent" in c and c["parent"] != 0 and c["parent"] != None:
             nodes[c["parent"]]["children"].append(nodes[c["id"]])
     parents = [n for n in nodes.values() if n["parent"] == 0 and c["parent"] != None]
     return make_response(json.dumps([parents][0]), 200)
@@ -253,7 +256,12 @@ def automoderate(self):
             moderate_posts()
         except Exception as e:
             traceback.print_exc()
+        try:
+            db.session.remove()
+        except:
+            traceback.print_exc()
         time.sleep(1)
+
 
 
 

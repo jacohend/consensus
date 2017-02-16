@@ -39,27 +39,43 @@
                                             <button ng-if="isOpen(post.id)" class="btn btn-primary pull-right" ng-click="openComment(post.id, 0)">Submit New</button>
                                             </br></br>
                                         </div>       
+
                                         <div ng-if="isOpen(post.id) && all_comments[post.id].length>0" ui-tree>
+
                                           <ol ui-tree-nodes="" ng-model="all_comments[post.id]">
                                             <li ng-repeat="parent in all_comments[post.id]" ui-tree-node>
                                               <div  ui-tree-handle>
-                                                <div class="card" style="margin-left: 20px;">{a parent.node.text a} </br>                                  
-                                                     <button data-nodrag style="display: inline-block;" ng-if="isOpen(post.id)" class="btn btn-primary pull-right" ng-click="openComment(post.id, parent.id)">Reply</button></div>
-
+                                                <div class="card" style="margin-left: 20px; height:40">{a parent.node.text a} </br> </br>
+                                                     <button data-nodrag data-nodrag style="display: inline-block; height:40; width: 50px; position: absolute; right: 0; bottom: 0;" ng-if="isOpen(post.id)" class="btn btn-primary pull-right" ng-click="openComment(post.id, parent.id)">Reply</button>
+                                                </div>
                                                 </br>
                                               </div>
+
                                               <ol ui-tree-nodes="" ng-model="parent.children">
                                                 <li ng-repeat="comment in parent.children" ui-tree-node>
                                                   <div ui-tree-handle>
-                                                    <div class="card" style="margin-left: 20px;">{a comment.node.text a}</br>
-                                                        <button data-nodrag style="display: inline-block;" ng-if="isOpen(post.id)" class="btn btn-primary pull-right" ng-click="openComment(post.id, comment.id)">Reply</button></div>
-
+                                                    <div class="card" style="margin-left: 20px; height:40">{a comment.node.text a}</br></br>
+                                                        <button data-nodrag style="display: inline-block; width: 50px; height:40; position: absolute; right: 0;bottom: 0;" ng-if="isOpen(post.id)" class="btn btn-primary pull-right" ng-click="openComment(post.id, comment.id)">Reply</button>
+                                                    </div>
                                                   </div>
+                                                    <ol ui-tree-nodes="" ng-model="comment.children">
+                                                    <li ng-repeat="child in comment.children" ui-tree-node>
+                                                      <div ui-tree-handle>
+                                                        <div class="card" style="margin-left: 20px; height:40">{a child.node.text a}</br></br>
+                                                        </div>
+                                                    </div>
+                                                  </li>
+                                                  </ol>
+
                                                 </li>
                                               </ol>
+
                                             </li>
                                           </ol>
+
                                         </div>
+
+
                                     </div>
                                 </div>
                                 </br>

@@ -1,10 +1,10 @@
 
-var app = angular.module("app", ["ui-listView", "ui.bootstrap", 'ui.tree', 'ngTagsInput', 'ui.thumbnail', 'mapboxgl-directive', 'ngEmbed']);
+var app = angular.module("app", ["ui-listView", "ui.bootstrap", 'ui.tree', 'ngTagsInput', 'ui.thumbnail', 'geolocation', 'mapboxgl-directive', 'ngEmbed']);
 app.run([function () {
     mapboxgl.accessToken = 'pk.eyJ1IjoibmFpbWlrYW4iLCJhIjoiY2lraXJkOXFjMDA0OXdhbTYzNTE0b2NtbiJ9.O64XgZQHNHcV2gwNLN2a0Q';
 
 }]);
-app.controller("Consensus", ['$scope', '$http', '$uibModal', function ($scope, $http, $uibModal) {
+app.controller("Consensus", ['$scope', '$http', '$uibModal', 'geolocation', function ($scope, $http, $uibModal, geolocation) {
         $scope.listViewOptions = {};
         $scope.search = {"tags":[{"text":"all"}], "post":""};
         $scope.comments = [{"children":[], "node":"No Comments", "parent":0}];
@@ -16,6 +16,7 @@ app.controller("Consensus", ['$scope', '$http', '$uibModal', function ($scope, $
         $scope.post_moderate={"moderate":{}};
         $scope.toggle = false;
         $scope.post_click_array = {}
+        $scope.city = "unknown";
 
         $scope.close = function() {
             $scope.$modalInstance.close();
@@ -79,7 +80,7 @@ app.controller("Consensus", ['$scope', '$http', '$uibModal', function ($scope, $
         $scope.newPost = function(){
             console.log("fuck");
             var url = "/tag/" + $scope.newP.tags;
-            var parameter = JSON.stringify({"link":$scope.newP.link, "title": $scope.newP.title, "text":$scope.newP.text});
+            var parameter = JSON.stringify({"toponym": $scope.city, "link":$scope.newP.link, "title": $scope.newP.title, "text":$scope.newP.text});
             $http.post(url, parameter).then(function onSuccess(response) {
                 // Handle success
                 var data = response.data;
@@ -99,7 +100,7 @@ app.controller("Consensus", ['$scope', '$http', '$uibModal', function ($scope, $
         $scope.newComment = function(){
             console.log("fuck");
             var url = "/post/" + $scope.comments_id;
-            var parameter = JSON.stringify({"text":$scope.newC.text, "parent":$scope.newC.parent, "tag":$scope.newC.tag});
+            var parameter = JSON.stringify({"toponym": $scope.city, "text":$scope.newC.text, "parent":$scope.newC.parent, "tag":$scope.newC.tag});
             console.log(parameter);
             $http.post(url, parameter).then(function onSuccess(response) {
                 // Handle success
@@ -263,6 +264,40 @@ app.controller("Consensus", ['$scope', '$http', '$uibModal', function ($scope, $
                     }}
             ]
         };
+        function codeLatLng(lat, lng) {
+            var latlng = new google.maps.LatLng(lat, lng);
+            geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'latLng': latlng}, function(results, status) {
+              if (status == google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                 //formatted address
+                //find country name
+                     for (var i=0; i<results[0].address_components.length; i++) {
+                    for (var b=0;b<results[0].address_components[i].types.length;b++) {
+
+                    //there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
+                        if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                            //this is the object you are looking for
+                            city= results[0].address_components[i];
+                            break;
+                        }
+                    }
+                }
+                //city data
+                    $scope.city = city.short_name;
+                } else {
+                    $scope.city = "unknown";
+                }
+              } else {
+                    $scope.city = "unknown";
+              }
+            });
+        }
+        geolocation.getLocation().then(function(data){
+            $scope.city = codeLatLng(data.coords.latitude, data.coords.longitude);
+            console.log($scope.city)
+        });
+
         $scope.loadPosts();
         //$scope.loadPosts();
         //$scope.newPost();

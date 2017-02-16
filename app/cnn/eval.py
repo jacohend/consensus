@@ -87,7 +87,12 @@ def classify_sentiment(sentence):
 
 	# Save the evaluation to a csv
 	predictions_human_readable = np.column_stack((np.array(x_raw), all_predictions))
-	return "positive" if int(float(predictions_human_readable.tolist()[0][1]))==1 else "negative"
+	result="indeterminate"
+	if int(float(predictions_human_readable.tolist()[0][1]))==1:
+		result = "positive"
+	elif int(float(predictions_human_readable.tolist()[0][1]))==0:
+		result = "negative"
+	return result
 	# out_path = os.path.join(FLAGS.checkpoint_dir, "..", "prediction.csv")
 	# print("Saving evaluation to {0}".format(out_path))
 	# with open(out_path, 'w') as f:

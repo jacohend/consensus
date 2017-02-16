@@ -8,6 +8,7 @@ Flask-Mail
 Flask-Limiter
 flask_paginate
 flask-recaptcha
+sqlalchemy
 redlock-py
 psycopg2
 twilio

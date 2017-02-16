@@ -37,19 +37,22 @@ def associate(children, parents):
     return orphans, parents
 
 
+def get_city(city):
+    g = geocoder.google(city)
+    g = g.json
+    if "city" in g and "lat" in g and "lon" in g:
+        return {"city": g["city"], "latitude": g["lat"], "longitude": g["lon"]}
+
+
 def get_toponym(ip):
     sys.stderr.write("looking up locale for ip {}".format(ip))
     try:
         g = geocoder.ip(ip) 
+        print(str(g))
         if g.latlng:
             return {"city": g.city, "latitude": g.latlng[0], "longitude": g.latlng[1]}
         elif g.city:
-            g = geocoder.google(g.city)
-            g = g.json
-            sys.stdout.write(g)
-            sys.stdout.flush()
-            if "city" in g and "lat" in g and "lon" in g:
-                return {"city": g["city"], "latitude": g["lat"], "longitude": g["lon"]}
+            return get_city(city)
         else:
             return {"city": "unknown", "latitude": 0.0, "longitude": 0.0}
     except Exception as e:

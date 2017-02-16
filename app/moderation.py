@@ -5,9 +5,11 @@ from database import db
 from utils import *
 from application import *
 from models import *
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 def moderate_posts():
-    lock = redlock.lock("post_query", 100)
+    lock = redlock.lock("post_query", 1000)
     if lock:
         posts = Post.query.filter(int(time.time()) - Post.updated > 300, int(time.time()) - Post.created < 432000, Post.visible==True).all()
         sys.stderr.write("examining {} posts".format(len(posts)))
@@ -16,7 +18,7 @@ def moderate_posts():
         sys.stderr.write("resource-locked, continuing")
         return
     for post in posts:
-        lock = redlock.lock(str(post.id), 100)
+        lock = redlock.lock(str(post.id), 1000)
         if lock:
             try:
                 modifier = post.upvote - post.downvote
@@ -50,7 +52,7 @@ def moderate_posts():
             return
 
 def moderate_comments(post_id):
-    lock = redlock.lock("comment_query", 100)
+    lock = redlock.lock("comment_query", 1000)
     if lock:
         comments = Comment.query.filter(Comment.post_id==post_id, int(time.time()) - Comment.updated > 300, int(time.time()) - Comment.created < 432000, Comment.visible==True).all()
         sys.stderr.write("examining {} comments".format(len(comments)))
@@ -59,7 +61,7 @@ def moderate_comments(post_id):
         sys.stderr.write("resource-locked, continuing")
         return
     for comment in comments:
-        lock = redlock.lock(str(comment.id), 100)
+        lock = redlock.lock(str(comment.id), 1000)
         if lock:
             try:
                 modifier = comment.upvote - comment.downvote
