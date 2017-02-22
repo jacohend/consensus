@@ -10,6 +10,7 @@ from flask_recaptcha import ReCaptcha
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import logging
+import threading
 
 from application import *
 from database import db
@@ -263,10 +264,6 @@ def automoderate(self):
 		time.sleep(1)
 
 
-
-
-
-
 # JWT Token authentication  ===================================================
 def authenticate(username, password):
 	user = user_datastore.find_user(email=username)
@@ -310,6 +307,7 @@ def bootstrap_app():
 		if db.session.query(User).count() == 0:
 			create_test_models()
 	automoderate.delay()
+
 
 @app.teardown_request
 def teardown(self):

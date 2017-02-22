@@ -31,6 +31,7 @@ def moderate_posts(config):
                 else:
                     post.trending="DOWN"
                 post.updated=int(time.time())
+                db.session.commit()
                 moderate_comments(post.id)
             except Exception as e:
                 traceback.print_exc()
@@ -44,7 +45,7 @@ def moderate_posts(config):
                     return
             except Exception as e:
                 traceback.print_exc()
-                sys.stderr.write(e)
+                sys.stderr.write(str(e))
             post.updated=int(time.time())
             db.session.commit()
             redlock.unlock(lock)
